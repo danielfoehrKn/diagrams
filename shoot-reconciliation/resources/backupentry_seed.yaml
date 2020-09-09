@@ -1,0 +1,11 @@
+apiVersion: extensions.gardener.cloud/v1alpha1
+kind: BackupEntry
+metadata:
+  name: shoot--<>
+spec:
+  bucketName: <>
+  region: eu-west-1
+  secretRef:
+    name: entry-shoot--<>
+    namespace: garden
+  type: aws

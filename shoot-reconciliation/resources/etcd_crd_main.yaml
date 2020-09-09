@@ -1,0 +1,43 @@
+apiVersion: druid.gardener.cloud/v1alpha1
+kind: Etcd
+metadata:
+  generation: 1
+  name: etcd-main
+  namespace: shoot--dev--stestq6mjlvsv
+spec:
+  backup:
+    garbageCollectionPeriod: 12h
+    garbageCollectionPolicy: Exponential
+    image: <>/gardener/etcdbrctl:0.8.0
+    port: 8080
+    quota: 8Gi
+    fullSnapshotSchedule: <>
+    deltaSnapshotPeriod: <>
+    deltaSnapshotMemoryLimit: <>
+    store:
+      secretRef:
+        name: etcd-backup
+      container: <bucket name from etcd-backup secret>
+      provider: S3
+      prefix: <name of backup entry> #used as prefix in bucket
+  etcd:
+    clientPort: 2379
+    defragmentationSchedule: 19 21 */3 * *
+    # image now set by druid & via override
+    # image: quay.io/coreos/etcd:v3.3.17
+    serverPort: 2380
+    tls:
+      clientTLSSecretRef:
+        name: etcd-client-tls
+        namespace: shoot--dev--stestq6mjlvsv
+      serverTLSSecretRef:
+        name: etcd-server-cert
+        namespace: shoot--dev--stestq6mjlvsv
+      tlsCASecretRef:
+        name: ca-etcd
+        namespace: shoot--dev--stestq6mjlvsv
+    role: main
+  replicas: 1
+  storageCapacity: 10Gi
+  storageClass: gardener.cloud-fast
+  volumeClaimTemplate: main-etcd

@@ -1,0 +1,15 @@
+apiVersion: extensions.gardener.cloud/v1alpha1
+kind: ControlPlane
+metadata:
+  name: <shoot-name>
+  namespace: shoot--dev--<shoot-name>
+spec:
+  infrastructureProviderStatus: <Infrastructure CRD status>
+  providerConfig:
+    apiVersion: aws.provider.extensions.gardener.cloud/<>
+    kind: ControlPlaneConfig
+  region: us-east-1
+  secretRef:
+    name: cloudprovider
+    namespace: shoot--dev--stestq6mjlvsv
+  type: aws

@@ -1,0 +1,93 @@
+## Introduction
+
+With this blog post I am going to share a technical diagram that tries tying together the 
+various bits and pieces that are involved when Gardener creates a Kubernetes cluster.
+I have created and curated the diagram visualising the Shoot reconciliation flow since I started to develop on the Gardener.
+Beside serving as memory aid for myself, I created it in hope that it could later help potential contributors, to understand a core piece of the quite complex Gardener machinery. 
+As a word of warning, the diagram and the amount components involved is rather large.
+It could have easily been split up in multiple diagrams (probably it should be), though I wanted all the components and connections to be visible in a single diagram in order to create an overview of the reconciliation flow. 
+
+The goal is to visualize the interactions of the components involved in the Shoot creation. 
+It is not the goal to serve as documentation of every component involved. 
+
+## Background
+
+Taking a step back, the Gardener [READ.me](https://github.com/gardener/gardener/blob/master/README.md) states 
+
+> In essence, Gardener is an [extension API server](https://kubernetes.io/docs/tasks/access-kubernetes-api/setup-extension-api-server/) 
+that comes along with a bundle of custom controllers. 
+It introduces new API objects in an existing Kubernetes cluster (which is called **garden** cluster) in order to use them for the 
+management of end-user Kubernetes clusters (which are called **shoot** clusters). 
+These shoot clusters are described via [declarative cluster specifications](https://github.com/gardener/gardener/blob/master/example/90-shoot.yaml) which are observed by the controllers.
+They will bring up the clusters, reconcile their state, perform automated updates and make sure they are always up and running.
+
+This means that Gardener, just like any Kubernetes controller, creates Kubernetes clusters (Shoots) using a reconciliation loop.
+
+The [Gardenlet](https://github.com/gardener/gardener/blob/master/docs/concepts/gardenlet.md) contains the controller and reconciliation loop responsible for the creation, update, deletion and migration of Shoot cluster (there are more, but we spare them in this article).
+In addition, the [Gardener Controller Manager](https://github.com/gardener/gardener/blob/master/docs/concepts/controller-manager.md) also reconciles Shoot resources, but only for seed-independent functionality such as Shoot hibernation, Shoot maintenance or quota control.
+
+This blog post is about the reconciliation loop in the Gardenlet responsible for creating and updating Shoot clusters. 
+The code [can be found here](https://github.com/gardener/gardener/blob/master/pkg/gardenlet/controller/shoot/shoot_control_reconcile.go).
+The reconciliation loops of the extension controllers can be found in their individual repositories.
+
+## Shoot reconciliation flow diagram 
+
+When Gardner creates a Shoot cluster, there are three conceptual layers involved: the Garden cluster, the Seed cluster and the Shoot cluster. 
+Each layer represents a top-level section in the diagram (similar to a lane in a BPMN diagram). 
+
+It might seem confusing, that the Shoot cluster itself is a layer, because the whole flow in the first place is about creating the Shoot cluster.
+I decided to introduce this separate layer to make a clear distinction between which resources exist in the Seed API server (managed by Gardener) and which in the Shoot API server (accessible by the Shoot owner).   
+
+Each section contains several components.
+Components are mostly Kubernetes resources in a Gardener installation (e.g. the gardenlet deployment in the Seed cluster).
+
+This is the list of components:
+
+**(Virtual) Garden Cluster**
+- Gardener Extension API server
+- Validation Provider Webhooks
+- Project Namespace
+
+**Seed Cluster**
+- Gardenlet
+- Seed API server 
+  - every Shoot Control Plane has a dedicated namespace in the Seed.
+- Cloud Provider (owned by Stakeholder). 
+  - Arguably part of the Shoot cluster but used by components in the Seed cluster to create infrastructure for the Shoot.
+- [Gardener DNS extension](https://github.com/gardener/external-dns-management)
+- Provider Extension (such as [gardener-extension-provider-aws](https://github.com/gardener/gardener-extension-provider-aws))
+- [Gardener Extension ETCD Druid](https://github.com/gardener/etcd-druid)
+- [Gardener Resource Manager](https://github.com/gardener/gardener-resource-manager)
+- Operating System Extension (such as [gardener-extension-os-gardenlinux](https://github.com/gardener/gardener-extension-os-gardenlinux))
+- Networking extension (such as [gardener-extension-networking-cilium](https://github.com/gardener/gardener-extension-networking-cilium))
+- [Machine Controller Manager](https://github.com/gardener/machine-controller-manager)
+- ContainerRuntime Extension (such as [gardener-extension-runtime-gvisor](https://github.com/gardener/gardener-extension-runtime-gvisor))
+- Shoot API server (in the Shoot Namespace in the Seed cluster)
+
+**Shoot Cluster**
+- Cloud Provider compute API (owned by Stakeholder) - for VM/Node creation
+- VM / Bare metal node hosted by Cloud Provider (in Stakeholder owned account)
+
+
+### How to use the diagram
+The diagram 
+- should be read from top to bottom - starting in the top left corner with the creation of the Shoot resource via the Gardener Extension API server.
+- should not require an encompassing documentation / description.
+  More detailed documentation on the components itself, can usually be found in the respective repository.
+- does not show which activities execute in parallel and have which exact dependent activities. This can be found out by [looking at the source code]().
+  It however tries to put the activities in a logical order how they would be executed during the reconciliation flow. 
+
+Occasionally, there is an info box with additional information next to parts in the diagram that in my point of view require further explanation.
+Large example resource for the Gardener CRDs (e.g Worker CRD, Infrastructure CRD) are placed on the left side and are referenced by a dotted line (-----).
+
+Be aware, that Gardener is an evolving project, so the diagram will most likely be already outdated by the time you are reading this.
+Nevertheless, it should give a solid starting point for further explorations into the details of the Gardener.
+
+### Flow diagram
+
+You can find the diagram [on Github.com](https://github.com/danielfoehrKn/gardener-diagrams/tree/master/shoot-reconciliation).
+There are multiple formats available (svg, vdx, draw.io, html).
+
+Please open an issue or open a PR in the repository if information is missing or is incorrect. 
+Thanks! 
+ 
