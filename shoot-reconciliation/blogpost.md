@@ -1,14 +1,14 @@
 ## Introduction
 
-With this blog post I am going to share a technical diagram that tries tying together the 
-various bits and pieces that are involved when Gardener creates a Kubernetes cluster.
-I have created and curated the diagram visualising the Shoot reconciliation flow since I started to develop on the Gardener.
-Beside serving as memory aid for myself, I created it in hope that it could later help potential contributors, to understand a core piece of the quite complex Gardener machinery. 
-As a word of warning, the diagram and the amount components involved is rather large.
-It could have easily been split up in multiple diagrams (probably it should be), though I wanted all the components and connections to be visible in a single diagram in order to create an overview of the reconciliation flow. 
+In this blog post I will share a technical diagram which attempts to tie together the 
+various components involved when Gardener creates a Kubernetes cluster.
+I have created and curated the diagram, which visualizes the Shoot reconciliation flow since I started developing on Gardener.
+Aside from serving as a memory aid for myself, I created it in hopes that it may potentially help contributors to understand a core piece of the complex Gardener machinery. 
+Please be advised that the diagram and components involved are large. 
+Although it can be easily divided into multiple diagrams, I want to show all the components and connections in a single diagram to create an overview of the reconciliation flow.
 
 The goal is to visualize the interactions of the components involved in the Shoot creation. 
-It is not the goal to serve as documentation of every component involved. 
+It is not intended to serve as a documentation of every component involved. 
 
 ## Background
 
