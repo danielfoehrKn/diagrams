@@ -1,6 +1,6 @@
-# Gardener Technical Diagrams
+# Technical Diagrams
 
-This repository contains technical diagrams describing the internal workings of Gardener. 
+This repository contains technical diagrams for various technical topics. 
 
 The diagrams are originally created with the desktop version of Draw.io.
 There is also a .vsdx file available in case you want to use Visio.
