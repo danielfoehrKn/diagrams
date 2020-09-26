@@ -1,0 +1,19 @@
+// from runtime/v2/task/shim.proto
+message CreateTaskRequest {
+  string id = 1;
+  string bundle = 2;
+  # mount for container rootfs
+  repeated containerd.types.Mount rootfs = 3;
+  bool terminal = 4;
+  string stdin = 5;
+  string stdout = 6;
+  string stderr = 7;
+  string checkpoint = 8;
+  string parent_checkpoint = 9;
+  # Additional shim dependendent options
+  google.protobuf.Any options = 10;
+}
+
+message CreateTaskResponse {
+  uint32 pid = 1;
+}
