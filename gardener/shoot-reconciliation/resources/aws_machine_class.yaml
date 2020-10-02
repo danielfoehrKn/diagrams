@@ -1,0 +1,28 @@
+apiVersion: machine.sapcloud.io/<>
+kind: AWSMachineClass
+metadata:
+  name: shoot--<shootName>>-<workerPoolName>
+  namespace: shoot--<>
+  # contains information from the worker.spec
+  # indirectly from the infrastructure.status
+spec:
+  ami: ami-<>
+  blockDevices:
+    - ebs:
+        volumeSize: 20
+        volumeType: gp2
+  iam:
+    name: shoot--<>-nodes
+  keyName: shoot--<>-ssh-publickey
+  machineType: m5.large
+  networkInterfaces:
+    - securityGroupIDs:
+        - sg-<>
+      subnetID: subnet-<>
+  region: eu-west-1
+  secretRef:
+    # secret contains cloud provider credentials
+    # and the user-data (downloader script)
+    # for the worker pool
+    name: shoot--<>
+    namespace: shoot--<ns>

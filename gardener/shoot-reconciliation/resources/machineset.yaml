@@ -1,0 +1,35 @@
+apiVersion: machine.sapcloud.io/v1alpha1
+kind: MachineSet
+metadata:
+  annotations:
+    deployment.kubernetes.io/desired-replicas: "3"
+    deployment.kubernetes.io/max-replicas: "4"
+    deployment.kubernetes.io/revision: "1"
+  name: shoot--<shootName>-<workerName>
+  namespace: shoot--d060239--seed-aws
+spec:
+  machineClass: {}
+  minReadySeconds: 500
+  replicas: 3
+  selector:
+    matchLabels:
+      name: shoot--d060239--seed-aws-cpu-worker-z1
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        name: shoot--d060239--seed-aws-cpu-worker-z1
+    spec:
+      class:
+        kind: AWSMachineClass
+        name: shoot--d060239--seed-aws-cpu-worker-z1-0b555
+status:
+  availableReplicas: 3
+  failedMachines: null
+  fullyLabeledReplicas: 3
+  lastOperation:
+    lastUpdateTime: null
+  machineSetCondition: null
+  observedGeneration: 4
+  readyReplicas: 3
+  replicas: 3

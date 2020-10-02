@@ -1,0 +1,14 @@
+apiVersion: machine.sapcloud.io/<>
+kind: Machine
+metadata:
+  name: shoot--<shootName>-<workerName>-xxx
+  namespace: shoot--<>
+spec:
+  class:
+    kind: AWSMachineClass
+    name: shoot--<>
+    # unset until machine has been created
+  providerID: aws:///eu-west-1/<providerID>
+status:
+  # unset until machine has been created
+  node: <node-name>

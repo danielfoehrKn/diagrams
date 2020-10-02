@@ -1,0 +1,20 @@
+apiVersion: extensions.gardener.cloud/v1alpha1
+kind: Network
+metadata:
+  name: <shoot-name>
+  namespace: shoot--<>
+spec:
+  podCIDR: 10.223.128.0/17
+  serviceCIDR: 10.223.0.0/17
+  type: calico
+  # <from shoot.spec.networking.providerConfig>
+  providerConfig:
+    # Example for calico
+    apiVersion: calico.extensions.../<>
+    kind: NetworkConfig
+    ipam:
+      type: host-local
+      cidr: usePodCIDR
+    backend: bird
+    typha:
+      enabled: true

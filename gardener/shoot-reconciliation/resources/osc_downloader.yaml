@@ -1,0 +1,36 @@
+apiVersion: extensions.gardener.cloud/v1alpha1
+kind: OperatingSystemConfig
+metadata:
+  name: cloud-config-<workerName>-downloader
+  namespace: shoot--<>
+spec:
+  files:
+    - content:
+        inline:
+          data: base64(api server LB shoot domain)
+      path: /var/lib/cloud-config-downloader/credentials/server
+#     Omitted: Shoot Api server TLS cert, cloud-config-downloader client cert & client key
+#      under path: /var/lib/cloud-config-downloader/credentials/
+    - content:
+        inline:
+          data: <downloader bash script>
+          encoding: b64
+      path: /var/lib/cloud-config-downloader/download-cloud-config.sh
+  purpose: provision
+  type: coreos
+  units:
+    - command: start
+      content: |
+        [Unit]
+        Description=Downloads the actual cloud config from the Shoot API server and executes it
+        After=docker.service docker.socket
+        Wants=docker.socket
+        [Service]
+        Restart=always
+        RestartSec=30
+        EnvironmentFile=/etc/environment
+        ExecStart=/var/lib/cloud-config-downloader/download-cloud-config.sh
+        [Install]
+        WantedBy=multi-user.target
+      enable: true
+      name: cloud-config-downloader.service

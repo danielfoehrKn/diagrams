@@ -1,2 +1,0 @@
-[plugins."io.containerd.runtime.v2.task"]
-platforms = ["linux/amd64"]

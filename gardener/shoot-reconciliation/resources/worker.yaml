@@ -1,0 +1,20 @@
+apiVersion: extensions.gardener.cloud/<>
+kind: Worker
+metadata:
+  name: <shoot-name>
+  namespace: shoot--<>
+spec:
+status:
+  # created machine deployments
+  machineDeployments:
+    - maximum: 6
+      minimum: 2
+      name: shoot--<>
+  providerStatus:
+    apiVersion: aws.provider.extensions.gardener.cloud/<>
+    kind: WorkerStatus
+    # AWS specific AMI that the MCM can create
+    machineImages:
+      - ami: ami-<>
+        name: coreos
+        version: 2303.3.0
