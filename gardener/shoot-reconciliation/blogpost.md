@@ -85,9 +85,10 @@ Nevertheless, it should give a solid starting point for further explorations int
 
 ### Flow diagram
 
-You can find the diagram [on Github.com](https://github.com/danielfoehrKn/gardener-diagrams/tree/master/shoot-reconciliation).
+The diagram can be found below and on [Github.com](https://github.com/danielfoehrKn/diagrams/tree/master/gardener/shoot-reconciliation).
 There are multiple formats available (svg, vsdx, draw.io, html).
 
 Please open an issue or open a PR in the repository if information is missing or is incorrect. 
 Thanks! 
- 
+
+<img style="width:300px; height: auto; margin: 0;auto" src="https://raw.githubusercontent.com/danielfoehrKn/diagrams/master/gardener/shoot-reconciliation/gardener_reconcile_with_grid.png" target="_blank"></a>

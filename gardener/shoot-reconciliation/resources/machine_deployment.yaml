@@ -20,8 +20,10 @@ spec:
         name: <abc>
     spec:
       class:
-        kind: AWSMachineClass
+        kind: MachineClass
         name: shoot--<>
+      nodeTemplate:
+        # see MachineClass
 
 status:
   availableReplicas: 3

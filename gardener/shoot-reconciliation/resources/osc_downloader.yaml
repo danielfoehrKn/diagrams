@@ -2,7 +2,7 @@ apiVersion: extensions.gardener.cloud/v1alpha1
 kind: OperatingSystemConfig
 metadata:
   name: cloud-config-<workerName>-downloader
-  namespace: shoot--<>
+  namespace: shoot--<>dd
 spec:
   files:
     - content:
@@ -10,12 +10,21 @@ spec:
           data: base64(api server LB shoot domain)
       path: /var/lib/cloud-config-downloader/credentials/server
 #     Omitted: Shoot Api server TLS cert, cloud-config-downloader client cert & client key
-#      under path: /var/lib/cloud-config-downloader/credentials/
+#     under path: /var/lib/cloud-config-downloader/credentials/
     - content:
         inline:
           data: <downloader bash script>
           encoding: b64
       path: /var/lib/cloud-config-downloader/download-cloud-config.sh
+    - content:
+        inline:
+# this is a placeholder. Read by the MCM from the machine class secret and before
+# applied via user-data, transparently replaced with the MCM-created bootstrap token per VM
+# Flow: OSC -> os-extension -> OSC.Status -> Worker.spec.pool.userData -> machine class secret
+          data: <<BOOTSTRAP_TOKEN>>
+          encoding: b64
+      path: /var/lib/cloud-config-downloader/credentials/bootstrap-token
+      transmitUnencoded: true # do not encode (keep cleartext)
   purpose: provision
   type: coreos
   units:

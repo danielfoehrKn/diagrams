@@ -5,8 +5,18 @@ metadata:
   namespace: shoot--<>
 spec:
   class:
-    kind: AWSMachineClass
+    kind: MachineClass
     name: shoot--<>
+  nodeTemplate:
+    metadata:
+      creationTimestamp: null
+      labels:
+        node.kubernetes.io/role: node
+        worker.garden.sapcloud.io/group: worker-two
+        worker.gardener.cloud/cri-name: containerd
+        worker.gardener.cloud/pool: worker-two
+        worker.gardener.cloud/system-components: "true"
+    spec: { }
     # unset until machine has been created
   providerID: aws:///eu-west-1/<providerID>
 status:

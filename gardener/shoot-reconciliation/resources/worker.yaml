@@ -4,6 +4,38 @@ metadata:
   name: <shoot-name>
   namespace: shoot--<>
 spec:
+  # taken from Infrastructure.Status reconciled by provider-extension
+  # AWS: Contains the created VPC, security groups, subnets
+  # ec2 ssh key, iam instance profile & roles
+  infrastructureProviderStatus:
+    apiVersion: aws.provider.extensions.gardener.cloud/<>
+    kind: InfrastructureStatus
+    # <...>
+  pools:
+    - machineImage:
+        name: coreos
+        version: 2303.3.0
+      machineType: m5.large
+      maxSurge: 1
+      maxUnavailable: 0
+      maximum: 6
+      minimum: 2
+      name: cpu-worker
+      # computed previously by os-extension and read by Gardenlet
+      # contains <<BOOTSTRAP_TOKEN>> placeholder in cleartext
+      # will be put into machine class secret to be applied as user-data
+      userData: <User-data of downloader OSC from OSC.status.cloudConfig.secretRef>
+      volume: <>
+      # addition volumes, optionally encrypted
+      dataVolumes: <>
+      zones:
+        - eu-west-1a
+  region: eu-west-1
+  secretRef:
+    name: cloudprovider
+    namespace: shoot--<>
+  sshPublicKey: <>
+  type: aws
 status:
   # created machine deployments
   machineDeployments:

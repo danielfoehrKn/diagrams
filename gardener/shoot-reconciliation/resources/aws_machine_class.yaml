@@ -1,25 +1,32 @@
 apiVersion: machine.sapcloud.io/<>
-kind: AWSMachineClass
+kind: MachineClass #out-of-tree
 metadata:
   name: shoot--<shootName>>-<workerPoolName>
   namespace: shoot--<>
   # contains information from the worker.spec
   # indirectly from the infrastructure.status
 spec:
-  ami: ami-<>
-  blockDevices:
+  provider: AWS
+  providerSpec:
+    ami: ami-<>
+    blockDevices:
     - ebs:
         volumeSize: 20
         volumeType: gp2
-  iam:
-    name: shoot--<>-nodes
-  keyName: shoot--<>-ssh-publickey
-  machineType: m5.large
-  networkInterfaces:
-    - securityGroupIDs:
-        - sg-<>
-      subnetID: subnet-<>
-  region: eu-west-1
+    iam:
+      name: shoot--<>-nodes
+    keyName: shoot--<>-ssh-publickey
+    machineType: m5.large
+    networkInterfaces:
+      - securityGroupIDs:
+          - sg-<>
+        subnetID: subnet-<>
+    region: eu-west-1
+    tags:
+      # tags for the node resource.
+      # Required for RuntimeClass for containerd
+      worker.gardener.cloud/cri-name: containerd
+      worker.gardener.cloud/pool: worker-two
   secretRef:
     # secret contains cloud provider credentials
     # and the user-data (downloader script)
